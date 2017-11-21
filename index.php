@@ -34,9 +34,9 @@ if(empty($jiraCommentAuthor)) {
 $post = [
 	'payload' => '{"username": "'.$bot_name.'", "icon_url": "ICON_URL_HERE",
 	"attachments": [{
-		"fallback": "'.$payloadText.'",
+		"fallback": "'.$message.'",
 		"color": "'.$color.'",
-		"text": "'.$payloadText.'"
+		"text": "'.$message.'"
 	}]
 }',
 ];
