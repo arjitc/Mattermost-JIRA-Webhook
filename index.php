@@ -12,29 +12,30 @@ $postBodyObject = json_decode($postBody);
 $jiraIssueKey = $postBodyObject->issue->key;
 $jiraIssueSummary = $postBodyObject->issue->fields->summary;
 $jiraWebhookEvent = $postBodyObject->webhookEvent;
-$jiraIssueStatus2 = $postBodyObject->issue->fields->status->name; //holds "To Do", "In Progress", "Done"
+$jiraIssueStatus = $postBodyObject->issue->fields->status->name; //holds "To Do", "In Progress", "Done"
 $jiraCommentAuthor = $postBodyObject->comment->author->name;
 $jiraCommentBody = $postBodyObject->comment->body;
 
 #Mattermost Message 
 if(empty($jiraCommentAuthor)) {
 	if($jiraWebhookEvent == "jira:issue_created") {
-		$message = "[$jiraIssueKey - $jiraIssueSummary]($jiraIssuesPath$jiraIssueKey) [CREATED]";
+		$message = "[$jiraIssueKey - $jiraIssueSummary]($jiraIssuesPath$jiraIssueKey) **[Created]**";
+		$color = "#FF8000";
 	} 
 	if($jiraWebhookEvent == "jira:issue_updated") {
-		$message = "[$jiraIssueKey - $jiraIssueSummary]($jiraIssuesPath$jiraIssueKey) [$jiraIssueStatus2]";
+		$message = "[$jiraIssueKey - $jiraIssueSummary]($jiraIssuesPath$jiraIssueKey) **[$jiraIssueStatus]**";
+		$color = "#249406";
 	}
 } else {
-	$message = "[[$jiraIssueKey]($jiraIssuesPath$jiraIssueKey)] **New Comment:** $jiraCommentBody by $jiraCommentAuthor";
+	$message = "[[$jiraIssueKey]($jiraIssuesPath$jiraIssueKey)] **[New Comment]** $jiraCommentBody by $jiraCommentAuthor";
+	$color = "#3707ad";
 }
-
-$payloadText = $message;
 
 $post = [
 	'payload' => '{"username": "'.$bot_name.'", "icon_url": "ICON_URL_HERE",
 	"attachments": [{
 		"fallback": "'.$payloadText.'",
-		"color": "#FF8000",
+		"color": "'.$color.'",
 		"text": "'.$payloadText.'"
 	}]
 }',
